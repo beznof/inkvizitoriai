@@ -1,0 +1,31 @@
+# Ignore node modules (you'll install inside container)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignore build output folder (like dist or build)
+dist
+build
+
+# Ignore environment files if you want (optional)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore IDE/editor files
+.vscode
+.idea
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore Docker-related files if you want
+Dockerfile
+docker-compose.yml
+
+# Ignore logs
+logs
+*.log
