@@ -21,7 +21,7 @@ var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 var port = 5432;
 
 // Build the DB connection string
-var connectionString = $"Host={server},Port={port};Database={database};Username={username};Password={password}";
+var connectionString = $"Host={server};Port={port};Database={database};Username={username};Password={password}";
 
 // Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));

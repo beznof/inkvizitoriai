@@ -11,5 +11,14 @@ namespace inkvBE.Data
     // Tables
     public DbSet<Test> Tests { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      base.OnModelCreating(modelBuilder);
+
+      modelBuilder.Entity<User>()
+        .HasIndex(user => user.Email)
+        .IsUnique();
+    }
   }
 }
