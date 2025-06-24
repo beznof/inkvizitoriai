@@ -10,5 +10,6 @@ namespace inkvBE.Data
 
     // Tables
     public DbSet<Test> Tests { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
   }
 }
