@@ -9,10 +9,10 @@ namespace inkvBE.Entities
 
         [Required]
         [StringLength(254)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         [StringLength(64)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }

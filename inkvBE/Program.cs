@@ -26,8 +26,6 @@ var connectionString = $"Host={server};Port={port};Database={database};Username=
 // Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
-// Repositories
-
 var app = builder.Build();
 
 // Middleware

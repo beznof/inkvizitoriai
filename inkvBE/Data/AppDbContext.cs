@@ -16,6 +16,7 @@ namespace inkvBE.Data
     {
       base.OnModelCreating(modelBuilder);
 
+      // Creates unique index for user's email
       modelBuilder.Entity<User>()
         .HasIndex(user => user.Email)
         .IsUnique();
