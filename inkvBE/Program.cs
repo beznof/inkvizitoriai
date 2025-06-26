@@ -1,17 +1,41 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using inkvBE.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using inkvBE.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load .env from root folder
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
+if (File.Exists(envPath)) Env.Load(envPath);
 
 // Register services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Load .env from root folder
-var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
-if (File.Exists(envPath)) Env.Load(envPath);
+// Register custom services
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+// JWT middleware
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")!))
+    };
+});
 
 // Read environmental variables
 var server = Environment.GetEnvironmentVariable("DB_SERVER");
@@ -26,7 +50,15 @@ var connectionString = $"Host={server};Port={port};Database={database};Username=
 // Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
+// Build
 var app = builder.Build();
+
+// DB connection log
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    Console.WriteLine(dbContext.Database.CanConnect() ? "Database connected successfully" : "Database connection failed");
+}
 
 // Middleware
 if (app.Environment.IsDevelopment())
@@ -37,6 +69,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseAuthentication();
 app.MapControllers();
 
 

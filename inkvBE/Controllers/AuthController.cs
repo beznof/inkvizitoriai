@@ -3,10 +3,8 @@ using inkvBE.Data;
 using Microsoft.AspNetCore.Mvc;
 using inkvBE.DTOs;
 using inkvBE.Entities;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
+using inkvBE.Services;
 
 namespace inkvBE.Controllers
 {
@@ -15,10 +13,12 @@ namespace inkvBE.Controllers
   public class AuthController : ControllerBase
   {
     private readonly AppDbContext _context;
+    private readonly IJwtService _jwtService;
 
-    public AuthController(AppDbContext context)
+    public AuthController(AppDbContext context, IJwtService jwtService)
     {
       _context = context;
+      _jwtService = jwtService;
     }
 
     [HttpPost("register")]
@@ -48,7 +48,9 @@ namespace inkvBE.Controllers
       _context.Users.Add(newUser);
       await _context.SaveChangesAsync();
 
-      return Ok(new { success = "User registered successfully" });
+      var token = _jwtService.GenerateToken(newUser);
+
+      return Ok(new { success = "User registered successfully", token });
     }
   }
 }
