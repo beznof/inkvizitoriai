@@ -71,13 +71,11 @@ namespace inkvBE.Controllers
                     return NotFound("Account does not exist");
                 }
 
-                // Hashing the password before comparing passwords
-                bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
-
                 //Checking if the passwords match
+                bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
                 if (!passwordsMatch)
                 {
-                    return Unauthorized("Incorrect password" + " " + existingUser.Password + " ; ");
+                    return Unauthorized("Incorrect password");
                 }
 
                 return Ok("User logged in successfully");
