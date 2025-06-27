@@ -5,6 +5,7 @@ using inkvBE.DTOs;
 using inkvBE.Entities;
 using Microsoft.EntityFrameworkCore;
 using inkvBE.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inkvBE.Controllers
 {
@@ -61,6 +62,13 @@ namespace inkvBE.Controllers
       });
 
       return Ok(new { success = "User registered successfully" });
+    }
+
+    [Authorize]
+    [HttpGet("ping-me")]
+    public ActionResult PingMe()
+    {
+      return Ok();
     }
   }
 }
