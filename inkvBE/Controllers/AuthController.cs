@@ -6,6 +6,8 @@ using inkvBE.Entities;
 using Microsoft.EntityFrameworkCore;
 using inkvBE.Services;
 using Microsoft.AspNetCore.Authorization;
+using BCrypt.Net;
+using System;
 
 namespace inkvBE.Controllers
 {
@@ -71,4 +73,46 @@ namespace inkvBE.Controllers
       return Ok();
     }
   }
+        [HttpGet("Login")]
+        public IActionResult Login(LoginDto body)
+        {
+            try
+            {
+                // Checking for empty fields
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                string email = body.Email!.Trim();
+                string password = body.Password!.Trim();
+
+                //Checking if the account actually exists
+                var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
+                if (existingUser == null)
+                {
+                    return NotFound("Account does not exist");
+                }
+
+                //Checking if the passwords match
+                bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
+                if (!passwordsMatch)
+                {
+                    return Unauthorized("Incorrect password");
+                }
+
+                return Ok("User logged in successfully");
+            }
+
+            catch (Exception ex)
+            {
+                //Returns code 500 if some other error occurs
+                var customResponse = new
+                {
+                    Code = 500,
+                    Message = "Internal Server Error",
+                    ErrorMessage = ex.Message
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
+            }
+        }
+    }
 }

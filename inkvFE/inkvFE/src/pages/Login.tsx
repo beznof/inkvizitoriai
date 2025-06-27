@@ -28,6 +28,7 @@ const LoginPage: React.FC = () => {
     }
 
     // Should be replaced with login logic later
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
