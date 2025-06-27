@@ -27,6 +27,19 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    // JWT retrieval settings
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = (context) =>
+        {
+            var accessToken = context.Request.Cookies["access_token"];
+            if (!string.IsNullOrEmpty(accessToken))
+                context.Token = accessToken;
+            return Task.CompletedTask;
+        }
+    };
+
+    // JWT validation settings
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = false,
