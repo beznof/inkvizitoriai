@@ -34,7 +34,7 @@ const RegisterPage: React.FC = () => {
             setError("The passwords do not match");
             return;
         }
-
+        console.log(email + password + confirmPassword);
         // Should be replaced with register logic later
 
         setIsLoading(true);

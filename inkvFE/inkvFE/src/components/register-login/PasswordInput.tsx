@@ -26,7 +26,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps> (
                     <PasswordVisiblityEye className="pointer-events-none size-5 fill-zinc-400"/>
                   </button>
                 }
-                className={`mb-2 ${className ?? ""}`}
+                className={`mb-5 ${className ?? ""}`}
                 classNames={{
                   input: "!text-black placeholder:text-zinc-500 ",
                   inputWrapper: `border rounded-lg border-zinc-300/50

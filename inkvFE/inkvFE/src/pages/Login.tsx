@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
             <PasswordInput password={password} setPassword={setPassword} text="Enter your password" isLoading={isLoading} ref={passwordInputRef}/>
 
             {/* Forgot your password ref */}
-            <div className="flex flex-col items-end justify-center w-full pr-4 mb-5">
+            <div className="flex flex-col items-end justify-center w-full pr-4 mb-5 -mt-4">
               <a href="/"
                 className="text-[10px] font-normal underline text-black hover:text-rose-600 transition-colors duration-100"
                 type="button"
