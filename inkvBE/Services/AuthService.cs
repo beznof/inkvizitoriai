@@ -18,10 +18,10 @@ namespace inkvBE.Services
     {
       // Setting claims
       var claims = new[] {
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),  // GUID
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),         // User's ID
-        new Claim(JwtRegisteredClaimNames.Email, user.Email!),              // User's email
-        new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())     // Issue time
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),                            // GUID
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),                                   // User's ID
+        new Claim(JwtRegisteredClaimNames.Email, user.Email!),                                        // User's email
+        new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())  // Issue time
       };
 
       // Setting up the crendentials
