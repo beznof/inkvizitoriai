@@ -72,7 +72,7 @@ namespace inkvBE.Controllers
     {
       return Ok();
     }
-  }
+
         [HttpGet("Login")]
         public IActionResult Login(LoginDto body)
         {

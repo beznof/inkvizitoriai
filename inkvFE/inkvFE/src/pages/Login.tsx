@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
             <EmailInput email={email} setEmail={setEmail} isLoading={isLoading} ref={emailInputRef}/>
 
             {/* Password field */}
-            <PasswordInput password={password} setPassword={setPassword} isLoading={isLoading} ref={passwordInputRef}/>
+            <PasswordInput password={password} setPassword={setPassword} text="Enter your password" isLoading={isLoading} ref={passwordInputRef}/>
 
             {/* Forgot your password ref */}
             <div className="flex flex-col items-end justify-center w-full pr-4 mb-5">
@@ -99,7 +99,7 @@ const LoginPage: React.FC = () => {
             {/* Don't have an account yet ref */}
             <div className="px-3 pt-1 mt-5 font-normal w-fit border-t-1 border-zinc-400/50 text-[14px]">
               Don't have an account yet?&nbsp;
-              <a href="/"
+              <a href="/register"
                 type="button"
                 className="font-semibold underline transition-colors duration-100 text-rose-600 hover:text-stone-600"
               >

@@ -5,16 +5,17 @@ import { Input } from "@heroui/input";
 type PasswordInputProps = {
   password: string;
   setPassword: (value: string) => void;
+  text: string;
   isLoading: boolean;
   className?: string;
 }
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps> (
-  ({ password, setPassword, isLoading, className}, ref) => {
+  ({ password, setPassword, text, isLoading, className}, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = React.useState<boolean>(false);
 
     return (
-      <Input type={isPasswordVisible ? "text" : "password"} placeholder="Enter your password" radius="lg" isDisabled={isLoading} 
+        <Input type={isPasswordVisible ? "text" : "password"} placeholder={ text } radius="lg" isDisabled={isLoading} 
                 value={password} onValueChange={setPassword}
                 endContent={
                   <button
