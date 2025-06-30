@@ -3,9 +3,9 @@ using inkvBE.Data;
 using Microsoft.AspNetCore.Mvc;
 using inkvBE.DTOs;
 using inkvBE.Entities;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using inkvBE.Services;
+using Microsoft.AspNetCore.Authorization;
 using BCrypt.Net;
 using System;
 
@@ -16,10 +16,14 @@ namespace inkvBE.Controllers
   public class AuthController : ControllerBase
   {
     private readonly AppDbContext _context;
+    private readonly IJwtService _jwtService;
+    private readonly IHostEnvironment _hostEnvironment;
 
-    public AuthController(AppDbContext context)
+    public AuthController(AppDbContext context, IJwtService jwtService, IHostEnvironment hostEnvironment)
     {
       _context = context;
+      _jwtService = jwtService;
+      _hostEnvironment = hostEnvironment;
     }
 
     [HttpPost("register")]
@@ -49,9 +53,25 @@ namespace inkvBE.Controllers
       _context.Users.Add(newUser);
       await _context.SaveChangesAsync();
 
+      // Generating and appending the JWT
+      var token = _jwtService.GenerateToken(newUser);
+      Response.Cookies.Append("access_token", token, new CookieOptions
+      {
+        HttpOnly = true,
+        Secure = !_hostEnvironment.IsDevelopment(),
+        SameSite = SameSiteMode.Lax,
+        Expires = DateTime.UtcNow.AddHours(2)
+      });
+
       return Ok(new { success = "User registered successfully" });
     }
 
+    [Authorize]
+    [HttpGet("ping-me")]
+    public ActionResult PingMe()
+    {
+      return Ok();
+    }
         [HttpGet("Login")]
         public IActionResult Login(LoginDto body)
         {
@@ -93,5 +113,5 @@ namespace inkvBE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
             }
         }
-    }
+  }
 }
