@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
   const passwordInputRef = React.useRef<HTMLInputElement>(null);
   const emailInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if(!email || !password) {
@@ -29,11 +29,33 @@ const LoginPage: React.FC = () => {
 
     // Should be replaced with login logic later
 
-    setIsLoading(true);
+    try {
+        const res = await fetch("http://localhost:5126/api/auth/login", { 
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({ Email: email, Password: password }) }
+        );
+        console.log("Body: " + res.body);
+        console.log("Status: " + res.status);
+        if (res.status == 200) {
+          //setIsAuthenticated(true);
+          console.log("Authentication successful");   // Explicitly for debugging, ought to be removed later
+          return;
+        } else {
+          throw new Error();
+        }
+      } catch (err: any) {
+        //setIsAuthenticated(false);
+        console.log("Authentication failed");   // Explicitly for debugging, ought to be removed later
+      }
+
+    /*setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       navigate("/");
-    },500)
+    },500)*/
   }
 
   return (

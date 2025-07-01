@@ -44,6 +44,8 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   // Call ping on mount
   React.useEffect(() => {
     console.log("Attempting to authenticated...");
+    //document.cookie is for testing, REMOVE AFTERWARDS
+    //document.cookie = "access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlODRiYjg0OS1mM2M5LTRlOWUtYmY5NC05MzEwNGEwNjQ5OTQiLCJzdWIiOiIxMSIsImVtYWlsIjoiQmVsZWthczVAZ21haWwuY29tIiwiaWF0IjoiMTc1MTM2NjQ1MiIsImV4cCI6MTc1MTM3MzY1Mn0.n4qWd9W3hWYnUxcYSV6hcwLIQ39I2Sf4Qfr_z3jkL1w";
     ping();
     console.log("Done authenticating!");
   }, []);

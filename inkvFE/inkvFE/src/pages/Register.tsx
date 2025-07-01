@@ -37,11 +37,33 @@ const RegisterPage: React.FC = () => {
         console.log(email + password + confirmPassword);
         // Should be replaced with register logic later
 
-        setIsLoading(true);
+        try {
+        const res = await fetch("http://localhost:5126/api/auth/register", { 
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({ Email: email, Password: password, ConfirmPassword: confirmPassword }) }
+        );
+        console.log("Body: " + res.body);
+        console.log("Status: " + res.status);
+        if (res.status == 200) {
+          //setIsAuthenticated(true);
+          console.log("Authentication successful");   // Explicitly for debugging, ought to be removed later
+          return;
+        } else {
+          throw new Error();
+        }
+      } catch (err: any) {
+        //setIsAuthenticated(false);
+        console.log("Authentication failed");   // Explicitly for debugging, ought to be removed later
+      }
+
+        /*setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
             navigate("/");
-        }, 500)
+        }, 500)*/
     }
 
     return (

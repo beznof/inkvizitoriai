@@ -57,7 +57,7 @@ namespace inkvBE.Controllers
       var token = _jwtService.GenerateToken(newUser);
       Response.Cookies.Append("access_token", token, new CookieOptions
       {
-        HttpOnly = true,
+        HttpOnly = false,
         Secure = !_hostEnvironment.IsDevelopment(),
         SameSite = SameSiteMode.Lax,
         Expires = DateTime.UtcNow.AddHours(2)
