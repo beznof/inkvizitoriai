@@ -6,6 +6,7 @@ import PasswordInput from "@/components/register-login/PasswordInput";
 import EmailInput from "@/components/register-login/EmailInput";
 import ErrorBox from "@/components/register-login/ErrorBox";
 import GoBack from "@/static/GoBack";
+import ROUTES from "@/enums/routes";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,35 +21,50 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if(!email || !password) {
       if(!email && emailInputRef.current) triggerAnimation(emailInputRef.current, "animate-shake");
       if(!password && passwordInputRef.current) triggerAnimation(passwordInputRef.current, "animate-shake");
+      setIsLoading(false);
       return;
     }
 
     // Should be replaced with login logic later
 
     try {
-        const res = await fetch("http://localhost:5126/api/auth/login", { 
-          method: 'GET',
+        /*const res = await fetch("http://localhost:5126/api/auth/login", { 
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json'
         },
           body: JSON.stringify({ Email: email, Password: password }) }
-        );
-        console.log("Body: " + res.body);
+        ).then((res) => res.json())
+        .then((json) => {console.log("Message = " + json.message);});*/
+
+        // Making request to backend api login
+        const res = await fetch("http://localhost:5126/api/auth/login", { 
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({ Email: email, Password: password }) }
+        )
+        const data = await res.json();
+        console.log("Message: " + data.message);
         console.log("Status: " + res.status);
         if (res.status == 200) {
-          //setIsAuthenticated(true);
-          console.log("Authentication successful");   // Explicitly for debugging, ought to be removed later
+          console.log("Login successful");   // Explicitly for debugging, ought to be removed later
+          navigate(ROUTES.HOME);
           return;
         } else {
+          setError(data.message);
           throw new Error();
         }
       } catch (err: any) {
-        //setIsAuthenticated(false);
-        console.log("Authentication failed");   // Explicitly for debugging, ought to be removed later
+        console.log("Login failed");   // Explicitly for debugging, ought to be removed later
+      } finally {
+        setIsLoading(false);
       }
 
     /*setIsLoading(true);

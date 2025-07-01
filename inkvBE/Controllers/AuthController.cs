@@ -39,7 +39,7 @@ namespace inkvBE.Controllers
       // Checking for duplicate users
       var existingUser = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
       if (existingUser != null)
-        return BadRequest(new { errors = "Such user already exists." });
+        return BadRequest(new { message = "Such user already exists." });
 
       // Hashing the password before storing
       string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
@@ -63,7 +63,7 @@ namespace inkvBE.Controllers
         Expires = DateTime.UtcNow.AddHours(2)
       });
 
-      return Ok(new { success = "User registered successfully" });
+      return Ok(new { message = "User registered successfully" });
     }
 
     [Authorize]
@@ -72,7 +72,7 @@ namespace inkvBE.Controllers
     {
       return Ok();
     }
-        [HttpGet("Login")]
+        [HttpPost("Login")]
         public IActionResult Login(LoginDto body)
         {
             try
@@ -88,17 +88,17 @@ namespace inkvBE.Controllers
                 var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
                 if (existingUser == null)
                 {
-                    return NotFound("Account does not exist");
+                    return NotFound(new { message = "Account does not exist" });
                 }
 
                 //Checking if the passwords match
                 bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
                 if (!passwordsMatch)
                 {
-                    return Unauthorized("Incorrect password");
+                    return Unauthorized(new { message = "Incorrect password"});
                 }
 
-                return Ok("User logged in successfully");
+                return Ok(new { message = "User logged in successfully"});
             }
 
             catch (Exception ex)
