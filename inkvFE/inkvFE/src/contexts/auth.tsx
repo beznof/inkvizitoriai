@@ -26,26 +26,20 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           method: 'GET',
           credentials: "include"
         });
-        console.log(res.body);
-        console.log(res.status);
         if (res.status == 200) {
           setIsAuthenticated(true);
-          console.log("Authentication successful");   // Explicitly for debugging, ought to be removed later
           return;
         } else {
           throw new Error();
         }
       } catch (err: any) {
         setIsAuthenticated(false);
-        console.log("Authentication failed");   // Explicitly for debugging, ought to be removed later
       }
   }
 
   // Call ping on mount
   React.useEffect(() => {
-    console.log("Attempting to authenticated...");
     ping();
-    console.log("Done authenticating!");
   }, []);
 
   return (
