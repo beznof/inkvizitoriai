@@ -26,28 +26,20 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           method: 'GET',
           credentials: "include"
         });
-        console.log(res.body);
-        console.log(res.status);
         if (res.status == 200) {
           setIsAuthenticated(true);
-          console.log("Authentication successful");   // Explicitly for debugging, ought to be removed later
           return;
         } else {
           throw new Error();
         }
       } catch (err: any) {
         setIsAuthenticated(false);
-        console.log("Authentication failed");   // Explicitly for debugging, ought to be removed later
       }
   }
 
   // Call ping on mount
   React.useEffect(() => {
-    console.log("Attempting to authenticated...");
-    //document.cookie is for testing, REMOVE AFTERWARDS
-    //document.cookie = "access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlODRiYjg0OS1mM2M5LTRlOWUtYmY5NC05MzEwNGEwNjQ5OTQiLCJzdWIiOiIxMSIsImVtYWlsIjoiQmVsZWthczVAZ21haWwuY29tIiwiaWF0IjoiMTc1MTM2NjQ1MiIsImV4cCI6MTc1MTM3MzY1Mn0.n4qWd9W3hWYnUxcYSV6hcwLIQ39I2Sf4Qfr_z3jkL1w";
     ping();
-    console.log("Done authenticating!");
   }, []);
 
   return (
