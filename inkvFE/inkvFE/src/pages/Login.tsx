@@ -33,18 +33,10 @@ const LoginPage: React.FC = () => {
     // Should be replaced with login logic later
 
     try {
-        /*const res = await fetch("http://localhost:5126/api/auth/login", { 
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-        },
-          body: JSON.stringify({ Email: email, Password: password }) }
-        ).then((res) => res.json())
-        .then((json) => {console.log("Message = " + json.message);});*/
-
         // Making request to backend api login
         const res = await fetch("http://localhost:5126/api/auth/login", { 
           method: 'POST',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json'
         },
@@ -58,7 +50,7 @@ const LoginPage: React.FC = () => {
           navigate(ROUTES.HOME);
           return;
         } else {
-          setError(data.message);
+          setError(data.message); //Sets error message shown to the user
           throw new Error();
         }
       } catch (err: any) {

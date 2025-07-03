@@ -97,8 +97,18 @@ namespace inkvBE.Controllers
                 {
                     return Unauthorized(new { message = "Incorrect password"});
                 }
+                
+                // Generating and appending the JWT
+                var token = _jwtService.GenerateToken(existingUser);
+                Response.Cookies.Append("access_token", token, new CookieOptions
+                {
+                  HttpOnly = false,
+                  Secure = !_hostEnvironment.IsDevelopment(),
+                  SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddHours(2)
+                });
 
-                return Ok(new { message = "User logged in successfully"});
+                return Ok(new { message = "User logged in successfully" });
             }
 
             catch (Exception ex)

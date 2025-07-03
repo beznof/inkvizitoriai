@@ -44,20 +44,24 @@ const RegisterPage: React.FC = () => {
         try {
         const res = await fetch("http://localhost:5126/api/auth/register", { 
           method: 'POST',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json'
         },
           body: JSON.stringify({ Email: email, Password: password, ConfirmPassword: confirmPassword }) }
         )
+
+        //Sets the data from response to object "data"
         const data = await res.json();
         console.log("Message: " + data.message);
         console.log("Status: " + res.status);
+
         if (res.status == 200) {
           console.log("Register successful");   // Explicitly for debugging, ought to be removed later
           navigate(ROUTES.HOME);
           return;
         } else {
-          setError(data.message);
+          setError(data.message); //Sets error message shown to the user
           throw new Error();
         }
       } catch (err: any) {
