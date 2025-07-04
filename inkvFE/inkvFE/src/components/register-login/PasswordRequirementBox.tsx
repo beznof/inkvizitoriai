@@ -17,20 +17,13 @@ const PasswordRequirements: React.FC<PasswordRequirementsProps> = ({
     numberValidated,
     symbolValidated,
 }) => {
-const allValid =
-    lengthValidated &&
-    lowerValidated &&
-    upperValidated &&
-    numberValidated &&
-    symbolValidated;
+
 
     
 
     return (
-        <div className="tracker-box w-full flex flex-col items-start text-left text-xs px-2 mb-3 gap-y-1">
-            {allValid && (
-                <p className="text-emerald-500">Your password is secure!</p>
-            )}
+        <div className="tracker-box w-full flex flex-col items-start text-left text-xs px-2 gap-y-1">
+            
 
             {!lengthValidated && (
                 <div className="text-red-500 transition-opacity duration-300 opacity-100">

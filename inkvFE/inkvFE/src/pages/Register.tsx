@@ -1,5 +1,5 @@
+import React from "react";
 import { Button } from "@heroui/button";
-import React, { useState } from "react"
 import { triggerAnimation } from "@/utils/RegisterLogin";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "@/components/register-login/PasswordInput";
@@ -8,7 +8,6 @@ import ErrorBox from "@/components/register-login/ErrorBox";
 import GoBack from "@/static/GoBack";
 import { usePasswordValidation } from "@/utils/PasswordValidation";
 import PasswordRequirements from "@/components/register-login/PasswordRequirementBox";
-import { spec } from "node:test/reporters";
 
 
 const RegisterPage: React.FC = () => {
@@ -30,6 +29,9 @@ const RegisterPage: React.FC = () => {
     } = usePasswordValidation();
 
     const allValid = lengthValidated && lowerValidated && upperValidated && numberValidated && symbolValidated;
+    const [showPasswordRequirements, setShowPasswordRequirements] = React.useState(false);
+
+
 
 
     
@@ -106,9 +108,16 @@ const RegisterPage: React.FC = () => {
                         {/* Email field */}
                         <EmailInput email={email} setEmail={setEmail} isLoading={isLoading} ref={emailInputRef} />
 
+                        
+
                         {/* Password field */}
                         <PasswordInput password={password} setPassword={setPassword} text="Enter your password" isLoading={isLoading} ref={passwordInputRef}
-                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {const value = e.target.value; setPassword(value); validatePassword(value);}} />
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                const value = e.target.value; setPassword(value); validatePassword(value);
+                                setShowPasswordRequirements(value.length > 0);
+                            }} onFocus={() => setShowPasswordRequirements(true)} onBlur={() => setShowPasswordRequirements(false)}
+                        />
+                        {showPasswordRequirements && (
                         <PasswordRequirements
                             lengthValidated={lengthValidated}
                             lowerValidated={lowerValidated}
@@ -116,9 +125,9 @@ const RegisterPage: React.FC = () => {
                             numberValidated={numberValidated}
                             symbolValidated={symbolValidated}
                         />
-                        
+                        )}
                         {/* Confirm password field */}
-                        <div className="w-full mb-5">
+                        <div className="w-full mt-3 mb-5">
                             <PasswordInput password={confirmPassword} setPassword={setConfirmPassword} text="Confirm your password" isLoading={isLoading} ref={confirmPasswordInputRef} />
                         </div>
                         {/* Submit button */}

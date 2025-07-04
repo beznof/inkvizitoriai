@@ -1,7 +1,6 @@
 import PasswordVisiblityEye from "@/static/PasswordVisiblityEye";
 import React from "react";
 import { Input } from "@heroui/input";
-
 type PasswordInputProps = {
   password: string;
   setPassword: (value: string) => void;
@@ -9,17 +8,20 @@ type PasswordInputProps = {
   isLoading: boolean;
   className?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+
 }
 
 
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps> (
-  ({ password, setPassword, text, isLoading, className, onChange }, ref) => {
+  ({ password, setPassword, text, isLoading, className, onChange, onFocus, onBlur }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = React.useState<boolean>(false);
 
     return (
         <Input type={isPasswordVisible ? "text" : "password"} placeholder={ text } radius="lg" isDisabled={isLoading} 
-                value={password} onValueChange={setPassword} onChange={onChange}
+                value={password} onValueChange={setPassword} onChange={onChange} onFocus={onFocus} onBlur={onBlur}
                 endContent={
                   <button
                     onMouseDown={() => setIsPasswordVisible(true)}
@@ -44,7 +46,6 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps> (
     )
   }
 )
-
 PasswordInput.displayName = "PasswordInput";
 
 export default PasswordInput;
