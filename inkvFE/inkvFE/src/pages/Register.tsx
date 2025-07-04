@@ -69,12 +69,6 @@ const RegisterPage: React.FC = () => {
         } finally {
           setIsLoading(false);
         }
-
-        /*setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            navigate("/");
-        }, 500)*/
     }
 
     return (

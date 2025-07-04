@@ -30,10 +30,8 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // Should be replaced with login logic later
-
+    // Making request to backend api login
     try {
-        // Making request to backend api login
         const res = await fetch("http://localhost:5126/api/auth/login", { 
           method: 'POST',
           credentials: "include",
@@ -42,9 +40,11 @@ const LoginPage: React.FC = () => {
         },
           body: JSON.stringify({ Email: email, Password: password }) }
         )
+
         const data = await res.json();
         console.log("Message: " + data.message);
         console.log("Status: " + res.status);
+        
         if (res.status == 200) {
           console.log("Login successful");   // Explicitly for debugging, ought to be removed later
           navigate(ROUTES.HOME);
