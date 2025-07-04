@@ -21,7 +21,9 @@ namespace inkvBE.Services
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),                            // GUID
         new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),                                   // User's ID
         new Claim(JwtRegisteredClaimNames.Email, user.Email!),                                        // User's email
-        new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())  // Issue time
+        new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()), // Issue time
+        new Claim("role", user.Role!.ToString() ?? "user"),                                           // User's role         
+        new Claim("exp", DateTimeOffset.UtcNow.AddHours(2).ToUnixTimeSeconds().ToString())            // Expiration time
       };
 
       // Setting up the crendentials
