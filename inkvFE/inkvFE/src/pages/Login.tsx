@@ -6,6 +6,7 @@ import PasswordInput from "@/components/register-login/PasswordInput";
 import EmailInput from "@/components/register-login/EmailInput";
 import ErrorBox from "@/components/register-login/ErrorBox";
 import GoBack from "@/static/GoBack";
+import ROUTES from "@/enums/routes";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,22 +19,51 @@ const LoginPage: React.FC = () => {
   const passwordInputRef = React.useRef<HTMLInputElement>(null);
   const emailInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if(!email || !password) {
       if(!email && emailInputRef.current) triggerAnimation(emailInputRef.current, "animate-shake");
       if(!password && passwordInputRef.current) triggerAnimation(passwordInputRef.current, "animate-shake");
+      setIsLoading(false);
       return;
     }
 
-    // Should be replaced with login logic later
+    // Making request to backend api login
+    try {
+        const res = await fetch("http://localhost:5126/api/auth/login", { 
+          method: 'POST',
+          credentials: "include",
+          headers: {
+            'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({ Email: email, Password: password }) }
+        )
 
-    setIsLoading(true);
+        const data = await res.json();
+        console.log("Message: " + data.message);
+        console.log("Status: " + res.status);
+        
+        if (res.status == 200) {
+          console.log("Login successful");   // Explicitly for debugging, ought to be removed later
+          navigate(ROUTES.HOME);
+          return;
+        } else {
+          setError(data.message); //Sets error message shown to the user
+          throw new Error();
+        }
+      } catch (err: any) {
+        console.log("Login failed");   // Explicitly for debugging, ought to be removed later
+      } finally {
+        setIsLoading(false);
+      }
+
+    /*setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       navigate("/");
-    },500)
+    },500)*/
   }
 
   return (
