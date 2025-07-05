@@ -1,11 +1,13 @@
+import React from "react";
 import { Button } from "@heroui/button";
-import React from "react"
 import { triggerAnimation } from "@/utils/RegisterLogin";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "@/components/register-login/PasswordInput";
 import EmailInput from "@/components/register-login/EmailInput";
 import ErrorBox from "@/components/register-login/ErrorBox";
 import GoBack from "@/static/GoBack";
+import { usePasswordValidation } from "@/utils/PasswordValidation";
+import PasswordRequirements from "@/components/register-login/PasswordRequirementBox";
 import ROUTES from "@/enums/routes";
 
 const RegisterPage: React.FC = () => {
@@ -17,6 +19,22 @@ const RegisterPage: React.FC = () => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>("wbrtbtrbtrbtrfwafwafwafwafwafawfhthththththththtdwdwdwdwdwdwdwdwdwdwdw");
 
+    const {
+        validatePassword,
+        lowerValidated,
+        upperValidated,
+        lengthValidated,
+        numberValidated,
+        symbolValidated
+    } = usePasswordValidation();
+
+    const allValid = lengthValidated && lowerValidated && upperValidated && numberValidated && symbolValidated;
+    const [showPasswordRequirements, setShowPasswordRequirements] = React.useState(false);
+
+
+
+
+    
     const passwordInputRef = React.useRef<HTMLInputElement>(null);
     const emailInputRef = React.useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = React.useRef<HTMLInputElement>(null);
@@ -33,9 +51,14 @@ const RegisterPage: React.FC = () => {
             return;
         }
 
+
         if (password != confirmPassword) {
             setError("The passwords do not match");
             setIsLoading(false)
+            return;
+        }
+        if (!allValid) {
+            setError("Your password does not meet security requirements");
             return;
         }
         console.log(email + password + confirmPassword);
@@ -111,12 +134,28 @@ const RegisterPage: React.FC = () => {
                         {/* Email field */}
                         <EmailInput email={email} setEmail={setEmail} isLoading={isLoading} ref={emailInputRef} />
 
+                        
+
                         {/* Password field */}
-                        <PasswordInput password={password} setPassword={setPassword} text="Enter your password" isLoading={isLoading} ref={passwordInputRef} />
-
+                        <PasswordInput password={password} setPassword={setPassword} text="Enter your password" isLoading={isLoading} ref={passwordInputRef}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                const value = e.target.value; setPassword(value); validatePassword(value);
+                                setShowPasswordRequirements(value.length > 0);
+                            }} onFocus={() => setShowPasswordRequirements(true)} onBlur={() => setShowPasswordRequirements(false)}
+                        />
+                        {showPasswordRequirements && (
+                        <PasswordRequirements
+                            lengthValidated={lengthValidated}
+                            lowerValidated={lowerValidated}
+                            upperValidated={upperValidated}
+                            numberValidated={numberValidated}
+                            symbolValidated={symbolValidated}
+                        />
+                        )}
                         {/* Confirm password field */}
-                        <PasswordInput password={confirmPassword} setPassword={setConfirmPassword} text="Confirm your password" isLoading={isLoading} ref={confirmPasswordInputRef} />
-
+                        <div className="w-full mt-3 mb-5">
+                            <PasswordInput password={confirmPassword} setPassword={setConfirmPassword} text="Confirm your password" isLoading={isLoading} ref={confirmPasswordInputRef} />
+                        </div>
                         {/* Submit button */}
                         <Button radius="lg" isLoading={isLoading} isDisabled={isLoading} type="submit"
                             className="w-[60%] bg-gradient-to-tr from-rose-600 to-stone-500 font-semibold text-white"
