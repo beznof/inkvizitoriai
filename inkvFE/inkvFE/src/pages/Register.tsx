@@ -17,7 +17,7 @@ const RegisterPage: React.FC = () => {
     const [email, setEmail] = React.useState<string>("");
     const [confirmPassword, setConfirmPassword] = React.useState<string>("");
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [error, setError] = React.useState<string>("wbrtbtrbtrbtrfwafwafwafwafwafawfhthththththththtdwdwdwdwdwdwdwdwdwdwdw");
+    const [error, setError] = React.useState<string>("");
 
     const {
         validatePassword,
@@ -43,27 +43,40 @@ const RegisterPage: React.FC = () => {
         e.preventDefault();
         setIsLoading(true);
 
+        //Checks if any fields are empty
         if (!email || !password || !confirmPassword) {
-            if (!email && emailInputRef.current) triggerAnimation(emailInputRef.current, "animate-shake");
-            if (!password && passwordInputRef.current) triggerAnimation(passwordInputRef.current, "animate-shake");
-            if (!confirmPassword && confirmPasswordInputRef.current) triggerAnimation(confirmPasswordInputRef.current, "animate-shake");
+            if (!email && emailInputRef.current) {
+                triggerAnimation(emailInputRef.current, "animate-shake");
+                setError("No email address has been provided");
+            }
+            else if (!password && passwordInputRef.current) {
+                triggerAnimation(passwordInputRef.current, "animate-shake");
+                setError("No password has been provided");
+            }
+            else if (!confirmPassword && confirmPasswordInputRef.current) {
+                triggerAnimation(confirmPasswordInputRef.current, "animate-shake");
+                setError("Password was not confirmed");
+            }
             setIsLoading(false)
             return;
         }
 
-
+        //Checks if given password matches the contents given in the confirm passowrd field
         if (password != confirmPassword) {
             setError("The passwords do not match");
             setIsLoading(false)
             return;
         }
+
+        //Checks if the given password is secure enough
         if (!allValid) {
             setError("Your password does not meet security requirements");
+            setIsLoading(false);
             return;
         }
         console.log(email + password + confirmPassword);
 
-        // Making request to backend api register
+        //Making request to backend api register
         try {
         const res = await fetch("http://localhost:5126/api/auth/register", { 
           method: 'POST',
