@@ -11,6 +11,7 @@ namespace inkvBE.Data
     // Tables
     public DbSet<Test> Tests { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Profile> Profiles { get; set; } = null!;
 
     // Additional model configurations
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,6 +22,16 @@ namespace inkvBE.Data
       modelBuilder.Entity<User>()
         .HasIndex(user => user.Email)
         .IsUnique();
+
+      modelBuilder.Entity<Profile>()
+        .HasIndex(profile => profile.Username)
+        .IsUnique();
+
+      modelBuilder.Entity<Profile>()
+        .HasOne(p => p.User)
+        .WithOne(u => u.Profile)
+        .HasForeignKey<Profile>(p => p.UserId);
+
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,10 +39,17 @@ namespace inkvBE.Data
       base.OnConfiguring(optionsBuilder);
 
       var newUsers = new[] {
-        new { Email = "inkv1@inkv.org", Password = "Inkv1!"},
-        new { Email = "inkv2@inkv.org", Password = "Inkv2!"},
-        new { Email = "inkv3@inkv.org", Password = "Inkv3!"}
+        new { Id = -1, Email = "inkv1@inkv.org", Password = "Inkv1!"},
+        new { Id = -2, Email = "inkv2@inkv.org", Password = "Inkv2!"},
+        new { Id = -3, Email = "inkv3@inkv.org", Password = "Inkv3!"}
       };
+
+      var newProfile = new[] {
+        new { Username = "inkv1", UserId = -1},
+        new { Username = "inkv2", UserId = -2},
+        new { Username = "inkv3", UserId = -3}
+      };
+
 
       // Admin users seeding
       optionsBuilder.UseSeeding((context, _) =>
