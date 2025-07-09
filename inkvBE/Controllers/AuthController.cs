@@ -54,7 +54,7 @@ namespace inkvBE.Controllers
       await _context.SaveChangesAsync();
 
       // Generating and appending the JWT
-      var token = _jwtService.GenerateToken(newUser);
+      var token = _jwtService.GenerateToken(newUser, 15, "access");
       Response.Cookies.Append("access_token", token, new CookieOptions
       {
         HttpOnly = true,
@@ -72,46 +72,71 @@ namespace inkvBE.Controllers
     {
       return Ok();
     }
-        [HttpGet("Login")]
-        public IActionResult Login(LoginDto body)
+
+    [HttpGet("Login")]
+    public IActionResult Login(LoginDto body)
+    {
+      try
+      {
+        // Checking for empty fields
+        if (!ModelState.IsValid)
+          return BadRequest(ModelState);
+
+        string email = body.Email!.Trim();
+        string password = body.Password!.Trim();
+
+        //Checking if the account actually exists
+        var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
+        if (existingUser == null)
         {
-            try
-            {
-                // Checking for empty fields
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                string email = body.Email!.Trim();
-                string password = body.Password!.Trim();
-
-                //Checking if the account actually exists
-                var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
-                if (existingUser == null)
-                {
-                    return NotFound("Account does not exist");
-                }
-
-                //Checking if the passwords match
-                bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
-                if (!passwordsMatch)
-                {
-                    return Unauthorized("Incorrect password");
-                }
-
-                return Ok("User logged in successfully");
-            }
-
-            catch (Exception ex)
-            {
-                //Returns code 500 if some other error occurs
-                var customResponse = new
-                {
-                    Code = 500,
-                    Message = "Internal Server Error",
-                    ErrorMessage = ex.Message
-                };
-                return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
-            }
+          return NotFound("Account does not exist");
         }
+
+        //Checking if the passwords match
+        bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
+        if (!passwordsMatch)
+        {
+          return Unauthorized("Incorrect password");
+        }
+
+        return Ok("User logged in successfully");
+      }
+
+      catch (Exception ex)
+      {
+        //Returns code 500 if some other error occurs
+        var customResponse = new
+        {
+          Code = 500,
+          Message = "Internal Server Error",
+          ErrorMessage = ex.Message
+        };
+        return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
+      }
+    }
+
+    [HttpPost("refresh")]
+    public IActionResult RefreshToken()
+    {
+      string refreshToken = Request.Cookies["refresh_token"]!;
+      if (string.IsNullOrEmpty(refreshToken))
+        return Unauthorized("Refresh token is missing");
+
+      bool isTokenValid = _jwtService.VerifyToken(refreshToken, "refresh");
+
+      if (isTokenValid)
+      {
+        var token = _jwtService.GenerateToken(newUser, 15, "access");
+        Response.Cookies.Append("access_token", token, new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddHours(2)
+        });
+        return Ok("Token refreshed");
+      }
+      return Unauthorized("No valid refresh token was found");
+    }
   }
 }
