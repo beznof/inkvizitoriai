@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>("wbrtbtrbtrbtrfwafwafwafwafwafawfhthththththththtdwdwdwdwdwdwdwdwdwdwdw");
+  const [error, setError] = React.useState<string>("");
 
   const passwordInputRef = React.useRef<HTMLInputElement>(null);
   const emailInputRef = React.useRef<HTMLInputElement>(null);
@@ -23,9 +23,16 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    //Checks if any fields are empty
     if(!email || !password) {
-      if(!email && emailInputRef.current) triggerAnimation(emailInputRef.current, "animate-shake");
-      if(!password && passwordInputRef.current) triggerAnimation(passwordInputRef.current, "animate-shake");
+      if(!email && emailInputRef.current) {
+        triggerAnimation(emailInputRef.current, "animate-shake");
+        setError("No email address has been provided");
+      }
+      else if(!password && passwordInputRef.current) {
+        triggerAnimation(passwordInputRef.current, "animate-shake");
+        setError("No password has been provided");
+      }
       setIsLoading(false);
       return;
     }
@@ -41,6 +48,7 @@ const LoginPage: React.FC = () => {
           body: JSON.stringify({ Email: email, Password: password }) }
         )
 
+        //Sets the data from response to object "data"
         const data = await res.json();
         console.log("Message: " + data.message);
         console.log("Status: " + res.status);
@@ -55,6 +63,7 @@ const LoginPage: React.FC = () => {
         }
       } catch (err: any) {
         console.log("Login failed");   // Explicitly for debugging, ought to be removed later
+        setError("Internal server error occured");
       } finally {
         setIsLoading(false);
       }
