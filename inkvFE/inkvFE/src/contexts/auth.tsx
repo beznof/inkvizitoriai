@@ -30,6 +30,14 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           setIsAuthenticated(true);
           return;
         } else {
+          const refreshRes = await fetch("http://localhost:5126/api/auth/refresh", { 
+            method: 'POST',
+            credentials: "include"
+          });
+          if(refreshRes.status == 200) {
+            setIsAuthenticated(true);
+            return;
+          }
           throw new Error();
         }
       } catch (err: any) {
