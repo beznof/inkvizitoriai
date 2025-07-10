@@ -1,4 +1,4 @@
-
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,7 +11,7 @@ namespace inkvBE.Services
   public interface IJwtService
   {
     string GenerateToken(User user, int expMinutes, string type);
-    public bool VerifyToken(string tokenValue, string tokenType);
+    public Task<User?> VerifyToken(string tokenValue, string tokenType);
   }
 
   public class JwtService : IJwtService
@@ -23,13 +23,6 @@ namespace inkvBE.Services
       _context = context;
     }
 
-    /// <summary>
-    /// Generates a JWT token
-    /// </summary>
-    /// <param name="user">The user for which to sign the JWT</param>
-    /// <param name="expMinutes">Expiration time in minutes</param>
-    /// <param name="type">The type of the token</param>
-    /// <returns>New JWT token</returns>
     public string GenerateToken(User user, int expMinutes, string type)
     {
       // Setting claims
@@ -57,13 +50,7 @@ namespace inkvBE.Services
       return new JwtSecurityTokenHandler().WriteToken(newToken);
     }
 
-    /// <summary>
-    /// Verifies the JWT token
-    /// </summary>
-    /// <param name="tokenValue">The JWT token provided</param>
-    /// <param name="tokenType">The type of the token</param>
-    /// <returns></returns>
-    public bool VerifyToken(string tokenValue, string tokenType)
+    public async Task<User?> VerifyToken(string tokenValue, string tokenType)
     {
       try
       {
@@ -77,15 +64,21 @@ namespace inkvBE.Services
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")!))
         }, out SecurityToken validatedToken);
 
-        var type = claimsPrincipal.FindFirst("type");
-        if (type?.Value != tokenType) throw new Exception("No 'type' claim found in the token.");
+        var type = claimsPrincipal.FindFirst("type")?.Value;
+        if (type != tokenType) throw new Exception("No 'type' claim found in the token.");
 
-        return true;
+        var subscriber = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (subscriber == null) throw new Exception("No 'sub' claim found in the token");
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == subscriber);
+        
+        if (user == null) throw new Exception("No such user was found");
+        return user;
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex);
-        return false;
+        return null;
       }
     }
   }
