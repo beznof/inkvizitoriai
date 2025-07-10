@@ -102,6 +102,7 @@ const RegisterPage: React.FC = () => {
         }
       } catch (err: any) {
         console.log("Register failed");   // Explicitly for debugging, ought to be removed later
+        setError("Internal server error occured");
         } finally {
           setIsLoading(false);
         }

@@ -63,6 +63,7 @@ const LoginPage: React.FC = () => {
         }
       } catch (err: any) {
         console.log("Login failed");   // Explicitly for debugging, ought to be removed later
+        setError("Internal server error occured");
       } finally {
         setIsLoading(false);
       }
