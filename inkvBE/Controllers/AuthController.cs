@@ -72,56 +72,86 @@ namespace inkvBE.Controllers
     {
       return Ok();
     }
-        [HttpPost("Login")]
-        public IActionResult Login(LoginDto body)
+    [HttpPost("Login")]
+    public IActionResult Login(LoginDto body)
+    {
+      try
+      {
+        // Checking for empty fields
+        if (!ModelState.IsValid)
+          return BadRequest(ModelState);
+
+        string email = body.Email!.Trim();
+        string password = body.Password!.Trim();
+
+        //Checking if the account actually exists
+        var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
+        if (existingUser == null)
         {
-            try
-            {
-                // Checking for empty fields
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                string email = body.Email!.Trim();
-                string password = body.Password!.Trim();
-
-                //Checking if the account actually exists
-                var existingUser = _context.Users.FirstOrDefault(user => user.Email == email);
-                if (existingUser == null)
-                {
-                    return NotFound(new { message = "Account does not exist" });
-                }
-
-                //Checking if the passwords match
-                bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
-                if (!passwordsMatch)
-                {
-                    return Unauthorized(new { message = "Incorrect password"});
-                }
-                
-                // Generating and appending the JWT
-                var token = _jwtService.GenerateToken(existingUser);
-                Response.Cookies.Append("access_token", token, new CookieOptions
-                {
-                  HttpOnly = true,
-                  Secure = !_hostEnvironment.IsDevelopment(),
-                  SameSite = SameSiteMode.Lax,
-                Expires = DateTime.UtcNow.AddHours(2)
-                });
-
-                return Ok(new { message = "User logged in successfully" });
-            }
-
-            catch (Exception ex)
-            {
-                //Returns code 500 if some other error occurs
-                var customResponse = new
-                {
-                    Code = 500,
-                    Message = "Internal Server Error",
-                    ErrorMessage = ex.Message
-                };
-                return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
-            }
+          return NotFound(new { message = "Account does not exist" });
         }
+
+        //Checking if the passwords match
+        bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
+        if (!passwordsMatch)
+        {
+          return Unauthorized(new { message = "Incorrect password" });
+        }
+
+        // Generating and appending the JWT
+        var token = _jwtService.GenerateToken(existingUser);
+        Response.Cookies.Append("access_token", token, new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddHours(2)
+        });
+
+        return Ok(new { message = "User logged in successfully" });
+      }
+
+      catch (Exception ex)
+      {
+        //Returns code 500 if some other error occurs
+        var customResponse = new
+        {
+          Code = 500,
+          Message = "Internal Server Error",
+          ErrorMessage = ex.Message
+        };
+        return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
+      }
+    }
+
+    [Authorize]
+    [HttpPost("Logout")]
+    public IActionResult Logout()
+    {
+      try
+      {
+        // Generating and appending the JWT
+        Response.Cookies.Append("access_token", "", new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddDays(-1) // Set expiration in the past to clear the cookie
+        });
+        return Ok(new { message = "User logged out successfully" });
+      }
+      catch (Exception ex)
+      {
+        //Returns code 500 if some other error occurs
+        var customResponse = new
+        {
+          Code = 500,
+          Message = "Internal Server Error",
+          ErrorMessage = ex.Message
+        };
+        return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
+      }
+    }
+        
   }
 }
