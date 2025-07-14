@@ -23,7 +23,7 @@ namespace inkvBE.Controllers
         }
 
 
-        [HttpPost("uploadimage")]
+        [HttpPost("upload")]
         [Authorize]
         public async Task<ActionResult> UploadImage([FromForm] IFormFile image)
         {
