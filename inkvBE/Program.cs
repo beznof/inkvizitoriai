@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using inkvBE.Services;
 using System.Text;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,15 @@ builder.Services.AddSwaggerGen();
 
 // Register custom services
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+
+var optionsAWS = new AmazonS3Config { RegionEndpoint = RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION")) };
+var clientS3 = new AmazonS3Client(
+    Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"),
+    Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"),
+    optionsAWS
+);
+builder.Services.AddSingleton<IAmazonS3>(clientS3);
 
 // JWT middleware
 builder.Services.AddAuthentication(options =>
