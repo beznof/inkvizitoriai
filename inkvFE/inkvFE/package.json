@@ -19,7 +19,7 @@
     "@heroui/navbar": "2.2.19",
     "@heroui/snippet": "2.2.22",
     "@heroui/switch": "2.2.19",
-    "@heroui/system": "2.4.17",
+    "@heroui/system": "^2.4.19",
     "@heroui/theme": "2.4.17",
     "@heroui/toast": "^2.0.12",
     "@heroui/use-theme": "2.1.9",
