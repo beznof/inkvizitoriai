@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
+import useAPI from "@/utils/ClientAPI";
 
 // Data stored in the context
 type AuthContextType = {
@@ -27,17 +28,16 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   const ping = async() => {
       try {
         setIsLoading(true);
-        const res = await fetch("http://localhost:5126/api/auth/ping-me", { 
-          method: 'GET',
-          credentials: "include"
+        const res = await useAPI("auth/ping-me", { 
+          method: 'GET'
         });
+        console.log(res);
         if (res.status == 200) {
           setIsAuthenticated(true);
           return;
         } else {
-          const refreshRes = await fetch("http://localhost:5126/api/auth/refresh", { 
+          const refreshRes = await useAPI("auth/refresh", { 
             method: 'POST',
-            credentials: "include"
           });
           if(refreshRes.status == 200) {
             setIsAuthenticated(true);

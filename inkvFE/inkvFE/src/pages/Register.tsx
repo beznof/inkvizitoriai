@@ -9,6 +9,7 @@ import GoBack from "@/static/GoBack";
 import { usePasswordValidation } from "@/utils/PasswordValidation";
 import PasswordRequirements from "@/components/register-login/PasswordRequirementBox";
 import ROUTES from "@/enums/routes";
+import useAPI from "@/utils/ClientAPI";
 
 const RegisterPage: React.FC = () => {
     const navigate = useNavigate();
@@ -31,10 +32,6 @@ const RegisterPage: React.FC = () => {
     const allValid = lengthValidated && lowerValidated && upperValidated && numberValidated && symbolValidated;
     const [showPasswordRequirements, setShowPasswordRequirements] = React.useState(false);
 
-
-
-
-    
     const passwordInputRef = React.useRef<HTMLInputElement>(null);
     const emailInputRef = React.useRef<HTMLInputElement>(null);
     const confirmPasswordInputRef = React.useRef<HTMLInputElement>(null);
@@ -78,22 +75,19 @@ const RegisterPage: React.FC = () => {
 
         //Making request to backend api register
         try {
-        const res = await fetch("http://localhost:5126/api/auth/register", { 
+        const res = await useAPI("auth/register", { 
           method: 'POST',
           credentials: "include",
           headers: {
             'Content-Type': 'application/json'
-        },
-          body: JSON.stringify({ Email: email, Password: password, ConfirmPassword: confirmPassword }) }
-        )
+          },
+          body: JSON.stringify({ Email: email, Password: password, ConfirmPassword: confirmPassword }) 
+        })
 
         //Sets the data from response to object "data"
         const data = await res.json();
-        console.log("Message: " + data.message);
-        console.log("Status: " + res.status);
 
         if (res.status == 200) {
-          console.log("Register successful");   // Explicitly for debugging, ought to be removed later
           navigate(ROUTES.HOME);
           return;
         } else {
@@ -101,7 +95,6 @@ const RegisterPage: React.FC = () => {
           throw new Error();
         }
       } catch (err: any) {
-        console.log("Register failed");   // Explicitly for debugging, ought to be removed later
         setError("Internal server error occured");
         } finally {
           setIsLoading(false);
