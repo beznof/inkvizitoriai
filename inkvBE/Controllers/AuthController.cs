@@ -113,7 +113,16 @@ namespace inkvBE.Controllers
           HttpOnly = true,
           Secure = !_hostEnvironment.IsDevelopment(),
           SameSite = SameSiteMode.Lax,
-        Expires = DateTime.UtcNow.AddHours(2)
+          Expires = DateTime.UtcNow.AddHours(2)
+        });
+
+        var refreshToken = _jwtService.GenerateToken(existingUser, REFRESH_TOKEN_EXP_MIN, "refresh");
+        Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddMinutes(REFRESH_TOKEN_EXP_MIN)
         });
 
         return Ok(new { message = "User logged in successfully" });
