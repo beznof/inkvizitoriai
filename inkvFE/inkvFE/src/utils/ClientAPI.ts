@@ -1,5 +1,3 @@
-import { loadEnv } from 'vite';
-
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAPI = async (endpoint: string, options: RequestInit = {}): Promise<Response> => {
