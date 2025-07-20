@@ -1,11 +1,10 @@
-import React from "react";
 import { title } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import ListingProperties from "@/components/listing/ListingProperties";
 
 export default function DocsPage() {
 
-  const [properties, setProperties] = React.useState<string[]>(["Used", "New", "Good condition"]);
+  const properties = ["Used", "New", "Good condition"];
 
   return (
     <DefaultLayout>
