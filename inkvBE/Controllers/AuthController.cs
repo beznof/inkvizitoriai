@@ -113,7 +113,7 @@ namespace inkvBE.Controllers
           HttpOnly = true,
           Secure = !_hostEnvironment.IsDevelopment(),
           SameSite = SameSiteMode.Lax,
-          Expires = DateTime.UtcNow.AddHours(2)
+          Expires = DateTime.UtcNow.AddMinutes(ACCESS_TOKEN_EXP_MIN)
         });
 
         var refreshToken = _jwtService.GenerateToken(existingUser, REFRESH_TOKEN_EXP_MIN, "refresh");
