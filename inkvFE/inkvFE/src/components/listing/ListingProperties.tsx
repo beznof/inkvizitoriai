@@ -9,7 +9,7 @@ const ListingProperties: React.FC<ListingPropertiesProps> = ({properties}) => {
     return(
         <div>
             {properties.map((property,index) =>(
-                 <Chip key= {index} color="danger" variant="shadow">{property}</Chip>
+                 <Chip key= {index} color="danger" variant="solid">{property}</Chip>
             ))}
         </div>
     )
