@@ -16,6 +16,7 @@ namespace inkvBE.Data
     public DbSet<Subcategory> Subcategories { get; set; } = null!;
     public DbSet<Entities.Type> Types { get; set; } = null!;
     public DbSet<City> Cities { get; set; }
+    public DbSet<ListingStatus> ListingStatuses { get; set; }
 
     // Additional model configurations
     protected override void OnModelCreating(ModelBuilder modelBuilder)
