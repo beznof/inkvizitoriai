@@ -17,6 +17,7 @@ namespace inkvBE.Data
     public DbSet<Entities.Type> Types { get; set; } = null!;
     public DbSet<City> Cities { get; set; }
     public DbSet<ListingStatus> ListingStatuses { get; set; }
+    public DbSet<ListingCondition> ListingConditions { get; set; }
 
     // Additional model configurations
     protected override void OnModelCreating(ModelBuilder modelBuilder)
