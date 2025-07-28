@@ -32,6 +32,7 @@ namespace inkvBE.Entities
 
         public City? City { get; set; }
 
+        [Required]
         public ListingStatus? Status { get; set; }
 
         [Required]
