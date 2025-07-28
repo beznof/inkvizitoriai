@@ -12,8 +12,8 @@ using inkvBE.Data;
 namespace inkvBE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250726143848_ListingCreate")]
-    partial class ListingCreate
+    [Migration("20250728070539_ListingAndImageEntitiesCreate")]
+    partial class ListingAndImageEntitiesCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace inkvBE.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("StatusId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypeId")
@@ -320,7 +320,9 @@ namespace inkvBE.Migrations
 
                     b.HasOne("inkvBE.Entities.ListingStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("inkvBE.Entities.Type", "Type")
                         .WithMany()
