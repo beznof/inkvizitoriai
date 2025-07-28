@@ -12,11 +12,11 @@ type ImageShowcaseProps = {
 const ImageShowcase: React.FC<ImageShowcaseProps> = ({images}) => {
     const [index, setIndex] = React.useState<number>(0);
 
-    const leftButtonPress = async (e: PressEvent) => {
+    const leftButtonPress = async () => {
         setIndex(index-1);
     }
 
-    const rightButtonPress = async (e: PressEvent) => {
+    const rightButtonPress = async () => {
         setIndex(index+1);
     }
 
