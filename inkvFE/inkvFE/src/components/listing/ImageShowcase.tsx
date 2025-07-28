@@ -1,6 +1,6 @@
 import React from "react";
 import {Image} from "@heroui/image";
-import { Button, PressEvent } from "@heroui/button";
+import {Button} from "@heroui/button";
 import LeftArrow from "@/static/LeftArrow";
 import RightArrow from "@/static/RightArrow";
 
