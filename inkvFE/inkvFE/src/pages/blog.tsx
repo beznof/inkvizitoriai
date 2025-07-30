@@ -4,6 +4,7 @@ import ListingProperties from "@/components/listing/ListingProperties";
 import HomepageCategory from "@/components/homepage/HomepageCategory";
 import { Category } from "@/types/Category";
 import { Subcategory } from "@/types/Subcategory";
+import CloseIcon from "@/static/CloseIcon";
 
 export default function DocsPage() {
 
@@ -23,7 +24,8 @@ export default function DocsPage() {
         <div className="inline-block max-w-lg text-center justify-center">
           <h1 className={title()}>Blog</h1>
           {properties && (<ListingProperties properties = {properties}/>)}
-          {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}/>}
+          {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}
+            svg={<CloseIcon width={20} height={20} fill="red"></CloseIcon>}/>}
         </div>
       </section>
     </DefaultLayout>
