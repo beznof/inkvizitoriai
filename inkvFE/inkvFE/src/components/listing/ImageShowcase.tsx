@@ -24,24 +24,20 @@ const ImageShowcase: React.FC<ImageShowcaseProps> = ({images}) => {
         <div className="w-full max-w-[900px] flex flex-col md:flex-row border-2 border-rose-500 bg-gray-950">
             {/*Shows left button*/}
             {index != 0 &&
-                <div className="mt-[200px]">
-                    <Button className="w-[80px] h-[50px] bg-gray-400" startContent={<LeftArrow/>} onPress={leftButtonPress}></Button>
+                <div className="absolute top-[480px] left-[435px] z-10">
+                    <Button className="w-[80px] h-[50px] bg-rose-500" startContent={<LeftArrow fill="white"/>} onPress={leftButtonPress}></Button>
                 </div>
             }
-            {/*Doesn't show left button*/}
-            {index == 0 && <div className="w-[80px] h-[50px]"></div>}
-            
+
             {/*Shows image*/}
-            <Image src = {images[index]} width={650}/>
+            <Image src = {images[index]} width={650} className="z-0"/>
             
             {/*Shows right button*/}
             {index != images.length-1 &&
-                <div className="mt-[200px]">
-                    <Button className="w-[80px] h-[50px] bg-gray-400" startContent={<RightArrow/>} onPress={rightButtonPress}></Button>
+                <div className="absolute top-[480px] right-[435px] z-10">
+                    <Button className="w-[80px] h-[50px] bg-rose-500" startContent={<RightArrow fill="white"/>} onPress={rightButtonPress}></Button>
                 </div>
             }
-            {/*Doesn't show right button*/}
-            {index == images.length-1 && <div className="w-[80px] h-[50px]"></div>}
         </div>
     )
 }
