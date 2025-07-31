@@ -163,6 +163,13 @@ namespace inkvBE.Controllers
           SameSite = SameSiteMode.Lax,
           Expires = DateTime.UtcNow.AddDays(-1) // Set expiration in the past to clear the cookie
         });
+        Response.Cookies.Append("refresh_token", "", new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddDays(-1) // Set expiration in the past to clear the cookie
+        });
         return Ok(new { message = "User logged out successfully" });
       }
       catch (Exception ex)
