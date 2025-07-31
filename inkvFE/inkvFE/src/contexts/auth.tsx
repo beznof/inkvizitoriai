@@ -1,13 +1,17 @@
 import React, { createContext, ReactNode } from "react";
+import LoadingScreen from "@/components/LoadingScreen";
+import useAPI from "@/utils/ClientAPI";
 
 // Data stored in the context
 type AuthContextType = {
   isAuthenticated: boolean;
+  isLoading: boolean;
 };
 
 // Default data
 const AuthContext = createContext<AuthContextType>({ 
   isAuthenticated: false,
+  isLoading: false,
 });
 
 // Wrapper props
@@ -18,22 +22,33 @@ type AuthContextProviderProps = {
 // Wrapper
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   // Ping function
   const ping = async() => {
       try {
-        const res = await fetch("http://localhost:5126/api/auth/ping-me", { 
-          method: 'GET',
-          credentials: "include"
+        setIsLoading(true);
+        const res = await useAPI("auth/ping-me", { 
+          method: 'GET'
         });
+        console.log(res);
         if (res.status == 200) {
           setIsAuthenticated(true);
           return;
         } else {
+          const refreshRes = await useAPI("auth/refresh", { 
+            method: 'POST',
+          });
+          if(refreshRes.status == 200) {
+            setIsAuthenticated(true);
+            return;
+          }
           throw new Error();
         }
       } catch (err: any) {
         setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
       }
   }
 
@@ -43,10 +58,8 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   }, []);
 
   return (
-    <AuthContext.Provider value={{ 
-      isAuthenticated: isAuthenticated
-    }}>
-      {children}
+    <AuthContext.Provider value={{ isAuthenticated, isLoading }}>
+      {isLoading ? <LoadingScreen/> : children}
     </AuthContext.Provider>
   )
 };

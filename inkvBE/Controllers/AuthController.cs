@@ -19,12 +19,16 @@ namespace inkvBE.Controllers
     private readonly IJwtService _jwtService;
     private readonly IHostEnvironment _hostEnvironment;
 
+    const int ACCESS_TOKEN_EXP_MIN = 15;      // 15 minutes
+    const int REFRESH_TOKEN_EXP_MIN = 10080;  // 7 days
+
     public AuthController(AppDbContext context, IJwtService jwtService, IHostEnvironment hostEnvironment)
     {
       _context = context;
       _jwtService = jwtService;
       _hostEnvironment = hostEnvironment;
     }
+
 
     [HttpPost("register")]
     public async Task<ActionResult> Register([FromBody] RegisterDto body)
@@ -54,24 +58,28 @@ namespace inkvBE.Controllers
       await _context.SaveChangesAsync();
 
       // Generating and appending the JWT
-      var token = _jwtService.GenerateToken(newUser);
-      Response.Cookies.Append("access_token", token, new CookieOptions
+      var accessToken = _jwtService.GenerateToken(newUser, ACCESS_TOKEN_EXP_MIN, "access");
+      Response.Cookies.Append("access_token", accessToken, new CookieOptions
       {
         HttpOnly = false,
         Secure = !_hostEnvironment.IsDevelopment(),
         SameSite = SameSiteMode.Lax,
-        Expires = DateTime.UtcNow.AddHours(2)
+        Expires = DateTime.UtcNow.AddMinutes(ACCESS_TOKEN_EXP_MIN)
+      });
+
+      var refreshToken = _jwtService.GenerateToken(newUser, REFRESH_TOKEN_EXP_MIN, "refresh");
+      Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+      {
+        HttpOnly = true,
+        Secure = !_hostEnvironment.IsDevelopment(),
+        SameSite = SameSiteMode.Lax,
+        Expires = DateTime.UtcNow.AddMinutes(REFRESH_TOKEN_EXP_MIN)
       });
 
       return Ok(new { message = "User registered successfully" });
     }
 
-    [Authorize]
-    [HttpGet("ping-me")]
-    public ActionResult PingMe()
-    {
-      return Ok();
-    }
+
     [HttpPost("Login")]
     public IActionResult Login(LoginDto body)
     {
@@ -99,13 +107,22 @@ namespace inkvBE.Controllers
         }
 
         // Generating and appending the JWT
-        var token = _jwtService.GenerateToken(existingUser);
+        var token = _jwtService.GenerateToken(existingUser, 15, "access");
         Response.Cookies.Append("access_token", token, new CookieOptions
         {
           HttpOnly = true,
           Secure = !_hostEnvironment.IsDevelopment(),
           SameSite = SameSiteMode.Lax,
-          Expires = DateTime.UtcNow.AddHours(2)
+          Expires = DateTime.UtcNow.AddMinutes(ACCESS_TOKEN_EXP_MIN)
+        });
+
+        var refreshToken = _jwtService.GenerateToken(existingUser, REFRESH_TOKEN_EXP_MIN, "refresh");
+        Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddMinutes(REFRESH_TOKEN_EXP_MIN)
         });
 
         return Ok(new { message = "User logged in successfully" });
@@ -122,6 +139,14 @@ namespace inkvBE.Controllers
         };
         return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
       }
+    }
+
+
+    [Authorize]
+    [HttpGet("ping-me")]
+    public ActionResult PingMe()
+    {
+      return Ok();
     }
 
     [Authorize]
@@ -152,6 +177,35 @@ namespace inkvBE.Controllers
         return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
       }
     }
-        
+
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult> RefreshToken()
+    {
+      // Retrieve refresh token
+      Request.Cookies.TryGetValue("refresh_token", out var refreshToken);
+      if (string.IsNullOrEmpty(refreshToken))
+        return Unauthorized("Refresh token is missing");
+
+      // Verify the token
+      User? user = await _jwtService.VerifyToken(refreshToken, "refresh");
+
+      // If such user exists, generate new token
+      if (user != null)
+      {
+        var token = _jwtService.GenerateToken(user, 15, "access");
+        Response.Cookies.Append("access_token", token, new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddMinutes(15)
+        });
+        return Ok("Token refreshed");
+      }
+
+      return Unauthorized("No valid refresh token was found");
+    }
   }
+  
 }
