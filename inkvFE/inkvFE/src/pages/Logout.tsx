@@ -11,11 +11,13 @@ const LogoutPage: React.FC = () => {
     const [error, setError] = React.useState<string>("");
 
     const navigate = useNavigate();
+
     const handleClick = () => {
-    navigate(-1);
+      navigate(-1);
     };
+
     const handleSubmit = async () => {
-    try {
+      try {
         const res = await useAPI("auth/logout", {
           method: 'POST',
           headers: {
@@ -34,8 +36,8 @@ const LogoutPage: React.FC = () => {
         setError("Internal server error occured");
       }
     }
+
     return (
-        
         <DefaultLayout>
             <h2 className="text-2xl font-bold">You are about to be logged out <span className="text-red-600">logout</span></h2>
                 <Button className="bg-stone-500 hover:bg-stone-600 text-white font-semibold mt-4 p-5 m-5"
