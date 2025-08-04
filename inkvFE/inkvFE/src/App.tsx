@@ -11,6 +11,7 @@ import LogoutPage from "./pages/Logout";
 import { AuthContextProvider } from "./contexts/auth";
 import PublicRoute from "./components/auth/PublicRoute";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route element={<PrivateRoute> <AboutPage/> </PrivateRoute>} path="/about" />
         <Route element={<PublicRoute> <LoginPage/> </PublicRoute>} path="login" />
         <Route element={<PublicRoute> <RegisterPage/> </PublicRoute>} path="register" />
+        <Route element={<NotFound/>} path="/*"/>
       </Routes>
     </AuthContextProvider>
   );
