@@ -22,16 +22,17 @@ type AuthContextProviderProps = {
 // Wrapper
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   // Ping function
   const ping = async() => {
       try {
         setIsLoading(true);
+
         const res = await useAPI("auth/ping-me", { 
           method: 'GET'
         });
-        console.log(res);
+        
         if (res.status == 200) {
           setIsAuthenticated(true);
           return;
@@ -39,10 +40,12 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
           const refreshRes = await useAPI("auth/refresh", { 
             method: 'POST',
           });
+
           if(refreshRes.status == 200) {
             setIsAuthenticated(true);
             return;
           }
+          
           throw new Error();
         }
       } catch (err: any) {

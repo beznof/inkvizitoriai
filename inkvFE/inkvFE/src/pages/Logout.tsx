@@ -11,11 +11,13 @@ const LogoutPage: React.FC = () => {
     const [error, setError] = React.useState<string>("");
 
     const navigate = useNavigate();
+
     const handleClick = () => {
-    navigate(-1);
+      navigate(-1);
     };
+
     const handleSubmit = async () => {
-    try {
+      try {
         const res = await useAPI("auth/logout", {
           method: 'POST',
           headers: {
@@ -34,6 +36,7 @@ const LogoutPage: React.FC = () => {
         setError("Internal server error occured");
       }
     }
+
     return (
         <div className="h-screen overflow-hidden">
             <MainLayout>
