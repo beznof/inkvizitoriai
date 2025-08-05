@@ -21,7 +21,8 @@ function App() {
         <Route element={<DocsPage/>} path="/docs" />
         <Route element={<PricingPage/>} path="/pricing" />
         <Route element={<BlogPage/>} path="/blog" />
-        <Route element={<PrivateRoute> <LogoutPage/> </PrivateRoute>} path="logout" />
+        <Route element={<LogoutPage/>} path="logout" />
+       // <Route element={<PrivateRoute> <LogoutPage/> </PrivateRoute>} path="logout" />
         <Route element={<PrivateRoute> <AboutPage/> </PrivateRoute>} path="/about" />
         <Route element={<PublicRoute> <LoginPage/> </PublicRoute>} path="login" />
         <Route element={<PublicRoute> <RegisterPage/> </PublicRoute>} path="register" />
