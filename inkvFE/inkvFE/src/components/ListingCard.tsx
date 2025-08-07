@@ -1,7 +1,6 @@
 import React from "react";
 import HeartFiled from "@/static/HeartFiled";
 import HeartUnfiled from "@/static/HeartUnfiled";
-import ROUTES from "@/enums/routes";
 
 type ListingCardProps = {
     imageURL: string;
