@@ -38,29 +38,30 @@ const LogoutPage: React.FC = () => {
     }
 
     return (
-        <div className="h-screen overflow-hidden">
-            <MainLayout>
-            <div className="flex justify-center items-center h-screen">
-                <h2 className="text-2xl font-bold">You are about to be <span className="text-red-600">logout</span> out</h2>
-                <Button className="bg-stone-500 hover:bg-stone-600 text-white font-semibold mt-4 p-5 m-5"
+      <MainLayout>
+        <div className="flex flex-col items-center justify-center min-h-full gap-16">
+            <p className="text-5xl font-bold text-center">You are about to be <span className="text-red-600">logged out</span> </p>
+            
+            <div className="flex flex-row items-center justify-center w-[60%] gap-5">
+              <Button className="flex-grow text-lg font-semibold text-white transition-all p-7 bg-stone-500 hover:bg-stone-500/70"
                 onPress={handleSubmit} type="button"
-                >
-                Confirm
-                </Button>
-                <Button className="w-32 bg-rose-600 hover:bg-rose-800 text-white font-semibold"
+              >
+                Continue
+              </Button>
+              <Button className="w-[60%] text-lg font-semibold text-white p-7 bg-rose-600 hover:bg-rose-600/70 transition-all"
                 onPress={handleClick} type="button" 
-                >
+              >
                 Cancel
-                </Button>
-                {error && 
-                (<ErrorBox
-                    error={error}
-                    onClose={() => setError("")}
-                />)
-                }
+              </Button>
             </div>
-            </MainLayout>
-        </div>   
+            {error && 
+              (<ErrorBox
+                  error={error}
+                  onClose={() => setError("")}
+              />)
+            }
+        </div>
+      </MainLayout>
     )
 }
 
