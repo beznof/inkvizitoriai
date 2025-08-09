@@ -2,7 +2,6 @@ import React from "react";
 import HeartFilled from "@/static/HeartFilled";
 import HeartUnfilled from "@/static/HeartUnfilled";
 import {Card, CardBody, CardFooter} from "@heroui/card";
-import {Image} from "@heroui/image";
 import {Divider} from "@heroui/divider"
 
 type ListingCardProps = {
