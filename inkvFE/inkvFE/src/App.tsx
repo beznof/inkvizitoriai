@@ -1,10 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 import IndexPage from "@/pages/index";
-import DocsPage from "@/pages/docs";
-import PricingPage from "@/pages/pricing";
 import BlogPage from "@/pages/blog";
-import AboutPage from "@/pages/about";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import { AuthContextProvider } from "./contexts/auth";
@@ -17,10 +14,7 @@ function App() {
     <AuthContextProvider>
       <Routes>
         <Route element={<IndexPage/>} path="/"/>
-        <Route element={<DocsPage/>} path="/docs" />
-        <Route element={<PricingPage/>} path="/pricing" />
         <Route element={<BlogPage/>} path="/blog" />
-        <Route element={<PrivateRoute> <AboutPage/> </PrivateRoute>} path="/about" />
         <Route element={<PublicRoute> <LoginPage/> </PublicRoute>} path="login" />
         <Route element={<PublicRoute> <RegisterPage/> </PublicRoute>} path="register" />
         <Route element={<NotFound/>} path="/*"/>
