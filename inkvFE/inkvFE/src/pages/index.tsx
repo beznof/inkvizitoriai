@@ -5,14 +5,13 @@ import { button as buttonStyles } from "@heroui/theme";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
-import DefaultLayout from "@/layouts/default";
+import MainLayout from "@/layouts/MainLayout";
 
 export default function IndexPage() {
   return (
-    <DefaultLayout>
+    <MainLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="inline-block max-w-lg text-center justify-center">
+        <div className="justify-center inline-block max-w-lg text-center">
           <span className={title()}>Make&nbsp;</span>
           <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
           <br />
@@ -41,7 +40,6 @@ export default function IndexPage() {
             className={buttonStyles({ variant: "bordered", radius: "full" })}
             href={siteConfig.links.github}
           >
-            <GithubIcon size={20} />
             GitHub
           </Link>
         </div>
@@ -55,6 +53,6 @@ export default function IndexPage() {
           </Snippet>
         </div>
       </section>
-    </DefaultLayout>
+    </MainLayout>
   );
 }
