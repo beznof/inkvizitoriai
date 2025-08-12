@@ -18,25 +18,6 @@ const ListingCard: React.FC<ListingCardProps> = ({imageURL, name, price, city}) 
     return(
         <a href="/" className="w-full group">
             <div className="flex flex-col items-center justify-center w-[100%] h-full gap-y-5">
-                <div className="flex items-center p-4 rounded shadow-xl">
-                    <img src={imageURL} alt={name} className="object-cover w-full h-40 mb-2" />
-                    <div className="flex flex-col items-center justify-center">
-                        <div className="flex items-center">
-                            <h2 className="m-2 text-lg font-bold whitespace-nowrap">{name}</h2>
-                            {isFavored && 
-                            (<div>
-                                <button  onClick={() => setIsFavored(prev => !prev)}><HeartFilled></HeartFilled></button>
-                            </div>)}
-                            {!isFavored && 
-                            (<div>
-                                <button onClick={() => setIsFavored(prev => !prev)}><HeartUnfilled></HeartUnfilled></button>
-                            </div>)}
-                        </div>
-                        <p className="m-2">{city}</p>
-                        <h2 className="m-2 text-xl text-rose-500">{price} €</h2>
-                    </div>
-                </div>
-
                 <Card className="w-full group">
                     <CardBody className="flex flex-row items-start justify-between">
                         <div className="flex flex-row">
