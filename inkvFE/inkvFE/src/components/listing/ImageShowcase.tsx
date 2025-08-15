@@ -21,22 +21,26 @@ const ImageShowcase: React.FC<ImageShowcaseProps> = ({images}) => {
     }
 
     return(
-        <div className="w-full max-w-[900px] flex flex-col md:flex-row border-2 border-rose-500 bg-gray-950">
+        <div className="max-w-[900px] relative border-2 border-rose-500 bg-gray-950">
             {/*Shows left button*/}
             {index != 0 &&
-                <div className="absolute top-[480px] left-[435px] z-10">
-                    <Button className="w-[80px] h-[50px] bg-rose-500" startContent={<LeftArrow fill="white"/>} onPress={leftButtonPress}></Button>
-                </div>
+                <Button className="absolute top-1/2 left-[10px] z-10 !min-w-0 !w-fit !p-1 rounded-md bg-rose-500 h-auto" 
+                    onPress={leftButtonPress}
+                >
+                    <LeftArrow fill="white" className="size-[30px]"/>
+                </Button>
             }
 
             {/*Shows image*/}
             <Image src = {images[index]} width={650} className="z-0"/>
-            
+
             {/*Shows right button*/}
             {index != images.length-1 &&
-                <div className="absolute top-[480px] right-[435px] z-10">
-                    <Button className="w-[80px] h-[50px] bg-rose-500" startContent={<RightArrow fill="white"/>} onPress={rightButtonPress}></Button>
-                </div>
+                <Button className="absolute top-1/2 right-[10px] z-10 !min-w-0 !w-fit !p-1 rounded-md bg-rose-500" 
+                    onPress={rightButtonPress}
+                >
+                    <RightArrow fill="white" className="size-[30px]"/>
+                </Button>
             }
         </div>
     )
