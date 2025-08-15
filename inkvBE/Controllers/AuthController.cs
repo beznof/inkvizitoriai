@@ -103,9 +103,9 @@ namespace inkvBE.Controllers
         bool passwordsMatch = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
         if (!passwordsMatch)
         {
-          return Unauthorized(new { message = "Incorrect password"});
+          return Unauthorized(new { message = "Incorrect password" });
         }
-        
+
         // Generating and appending the JWT
         var token = _jwtService.GenerateToken(existingUser, 15, "access");
         Response.Cookies.Append("access_token", token, new CookieOptions
@@ -149,6 +149,42 @@ namespace inkvBE.Controllers
       return Ok();
     }
 
+    [Authorize]
+    [HttpPost("Logout")]
+    public IActionResult Logout()
+    {
+      try
+      {
+        // Generating and appending the JWT
+        Response.Cookies.Append("access_token", "", new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddDays(-1) // Set expiration in the past to clear the cookie
+        });
+        Response.Cookies.Append("refresh_token", "", new CookieOptions
+        {
+          HttpOnly = true,
+          Secure = !_hostEnvironment.IsDevelopment(),
+          SameSite = SameSiteMode.Lax,
+          Expires = DateTime.UtcNow.AddDays(-1) // Set expiration in the past to clear the cookie
+        });
+        return Ok(new { message = "User logged out successfully" });
+      }
+      catch (Exception ex)
+      {
+        //Returns code 500 if some other error occurs
+        var customResponse = new
+        {
+          Code = 500,
+          Message = "Internal Server Error",
+          ErrorMessage = ex.Message
+        };
+        return StatusCode(StatusCodes.Status500InternalServerError, customResponse);
+      }
+    }
+
 
     [HttpPost("refresh")]
     public async Task<ActionResult> RefreshToken()
@@ -160,7 +196,7 @@ namespace inkvBE.Controllers
 
       // Verify the token
       User? user = await _jwtService.VerifyToken(refreshToken, "refresh");
-      
+
       // If such user exists, generate new token
       if (user != null)
       {
@@ -178,4 +214,5 @@ namespace inkvBE.Controllers
       return Unauthorized("No valid refresh token was found");
     }
   }
+  
 }
