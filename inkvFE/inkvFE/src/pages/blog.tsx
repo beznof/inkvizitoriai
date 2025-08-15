@@ -3,6 +3,8 @@ import ListingCard from "@/components/ListingCard";
 import MainLayout from "@/layouts/MainLayout";
 import ListingProperties from "@/components/listing/ListingProperties";
 import ImageShowcase from "@/components/listing/ImageShowcase";
+import SearchBar from "@/components/SearchBar";
+import { City } from "@/types/City";
 
 export default function DocsPage() {
 
@@ -16,6 +18,11 @@ export default function DocsPage() {
     "https://plus.unsplash.com/premium_photo-1680700221535-a7aa2aa40a7c?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   ];
 
+  const citys:City[] =
+  [ {id: 1, name: "Kaunas"}, {id: 2, name: "Vilnius"},
+    {id: 3, name: "Kplaipeda"}, {id: 4, name: "Šiauliai"},
+  ];
+
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-center w-[60%] text-center mx-auto">
@@ -24,6 +31,7 @@ export default function DocsPage() {
           imageURL={ImageURL} name={name} price={price} city={city} />}
         {properties && (<ListingProperties properties = {properties}/>)}
         {images && <ImageShowcase images={images}/>}
+        {citys && <SearchBar citys ={citys}/>}
       </div>
     </MainLayout>
   );
