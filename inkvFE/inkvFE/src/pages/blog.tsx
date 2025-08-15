@@ -1,5 +1,6 @@
 import { title } from "@/components/primitives";
-import DefaultLayout from "@/layouts/default";
+import ListingCard from "@/components/ListingCard";
+import MainLayout from "@/layouts/MainLayout";
 import ListingProperties from "@/components/listing/ListingProperties";
 import HomepageCategory from "@/components/homepage/HomepageCategory";
 import { Category } from "@/types/Category";
@@ -8,6 +9,10 @@ import CloseIcon from "@/static/CloseIcon";
 
 export default function DocsPage() {
 
+  const ImageURL = "https://fastly.picsum.photos/id/21/3008/2008.jpg?hmac=T8DSVNvP-QldCew7WD4jj_S3mWwxZPqdF0CNPksSko4";
+  const name = "Sample ListingSample";
+  const price = 100;
+  const city = "Vilnius";
   const properties = ["Used", "New", "Good condition"];
   const category:Category = {id: 1, name:"Darbas, paslaugos"};
   const subcategories:Subcategory[] =
@@ -19,15 +24,15 @@ export default function DocsPage() {
   ];
 
   return (
-    <DefaultLayout>
-      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <div className="inline-block max-w-lg text-center justify-center">
-          <h1 className={title()}>Blog</h1>
-          {properties && (<ListingProperties properties = {properties}/>)}
+    <MainLayout>
+      <div className="flex flex-col items-center justify-center w-[60%] text-center mx-auto">
+        <h1 className={title()}>Blog</h1>
+        {ImageURL && name && price && city && <ListingCard
+          imageURL={ImageURL} name={name} price={price} city={city} />}
+        {properties && (<ListingProperties properties = {properties}/>)}
           {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}
             svg={<CloseIcon width={20} height={20} fill="red"></CloseIcon>}/>}
-        </div>
-      </section>
-    </DefaultLayout>
+      </div>
+    </MainLayout>
   );
 }
