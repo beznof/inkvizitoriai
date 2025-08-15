@@ -6,15 +6,15 @@ import ROUTES from "@/enums/routes";
 type HomepageCategoryProps = {
     category: Category;
     subcategories: Subcategory[];
-    svg:React.ReactNode;
+    svg?:React.ReactNode;
 }
 
 const HomepageCategory: React.FC<HomepageCategoryProps> = ({category, subcategories, svg}) => {
     return(
         <div className="w-full max-w-[250px]">
-            <div className="w-full max-w-[250px] grid grid-flow-col">
+            <div className="flex flex-row items-end justify-between w-full pr-2 mb-1">
                 <p className="grid justify-items-start font-bold text-rose-500">{category.name}</p>
-                <svg className="max-h-[20px]">{svg}</svg>
+                <svg className="size-9 fill-rose-500">{svg}</svg>
             </div>
             <div className="w-full max-w-[250px] border-2 border-rose-500"></div>
             {subcategories.map((subcategory,index) =>(

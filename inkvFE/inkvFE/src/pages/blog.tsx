@@ -31,7 +31,7 @@ export default function DocsPage() {
           imageURL={ImageURL} name={name} price={price} city={city} />}
         {properties && (<ListingProperties properties = {properties}/>)}
           {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}
-            svg={<CloseIcon width={20} height={20} fill="red"></CloseIcon>}/>}
+            svg={<CloseIcon></CloseIcon>}/>}
       </div>
     </MainLayout>
   );
