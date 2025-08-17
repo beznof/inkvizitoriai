@@ -1,12 +1,11 @@
 import React from "react";
 import {useState} from "react";
-import {Card, CardBody, CardFooter} from "@heroui/card"
+import {Card, CardBody} from "@heroui/card"
 import {Button} from "@heroui/button"
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownSection,
   DropdownItem
 } from "@heroui/dropdown";
 import {
@@ -119,7 +118,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ citys, categorys}) => {
                             {Object.values(selected).filter(Boolean).length === 0 ? "Miestai" :
                             Object.values(selected).filter(Boolean).length > 1 ?
                             Object.values(selected).filter(Boolean).length : citys
-                            .filter((citys, index) => selected[index])
+                            .filter((_, index) => selected[index])
                             .map((citys, index) => <div key={index}>{citys.name}</div>)}
                             <DownArrow className="ml-2 w-[50%] h-[50%]"></DownArrow>
                         </Button>
