@@ -37,7 +37,7 @@ export default function DocsPage() {
 
   return (
     <MainLayout>
-      <div className="flex flex-col items-center justify-center w-[60%] text-center mx-auto">
+      <div className="flex flex-col items-center justify-center w-[100%] text-center mx-auto">
         <h1 className={title()}>Blog</h1>
         {ImageURL && name && price && city && <ListingCard
           imageURL={ImageURL} name={name} price={price} city={city} />}
@@ -45,7 +45,7 @@ export default function DocsPage() {
         {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}
             svg={<CloseIcon></CloseIcon>}/>}
         {images && <ImageShowcase images={images}/>}
-        {citys && <SearchBar citys ={citys}/>}
+        {citys && category && <SearchBar citys={citys} categorys={[category]}/>}
       </div>
     </MainLayout>
   );

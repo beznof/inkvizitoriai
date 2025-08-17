@@ -22,16 +22,14 @@ import DownArrow from "@/static/DownArrow";
 import {City} from "@/types/City";
 import { Category } from "@/types/Category";
 
-type CityProps = {
+
+type SearchBarProps = {
+    categorys: Category[];
     citys: City[];
 }
 
-type CategoryProps = {
-    category: Category;
-}
 
-
-const SearchBar: React.FC<CityProps> = ({ citys }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ citys, categorys}) => {
     const {isOpen, onOpen, onClose} = useDisclosure();
     
     const [selected, setSelected] = useState<{ [key: number]: boolean }>({});
@@ -43,23 +41,53 @@ const SearchBar: React.FC<CityProps> = ({ citys }) => {
         }));
     };
 
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Kategorijos"]));
+
+    const handleSelectionChange = (keys: any) => {
+    if (keys === "all") {
+        setSelectedKeys(new Set(["all"]));
+    } else {
+        setSelectedKeys(new Set(keys as Set<string>));
+    }
+    };
+
+     const selectedValue = React.useMemo(
+        () => Array.from(selectedKeys).join(", "),
+        [selectedKeys],
+    );
+
     return (
         <div className="h-screen w-screen flex items-center justify-center select-none">
-            <Card>
+            <Card className="w-[90%]">
                 <CardBody>
                     <div className="flex items-center justify-center">
                         <Dropdown>
                             <DropdownTrigger>
-                                <Button variant="bordered">Kategorija<DownArrow className="ml-2 w-6 h-6"></DownArrow></Button>
+                                <Button variant="bordered" className="w-[15%]">
+                                    {selectedKeys.size === 0 ? "Kategorijos" :
+                                    selectedValue}
+                                    <DownArrow className="ml-2 w-[50%] h-[50%]"></DownArrow>
+                                </Button>
                             </DropdownTrigger>
-                            <DropdownMenu aria-label="Static Actions">
-                                <DropdownItem key="new">New file</DropdownItem>
+                            <DropdownMenu aria-label="Static Actions"
+                            selectedKeys={selectedKeys}
+                            selectionMode="single"
+                            onSelectionChange={handleSelectionChange}
+                            >       
+                                {categorys.map((category: Category) =>(
+                                <DropdownItem
+                                    key={category.name}
+                                    color="default"
+                                    >
+                                    {category.name}
+                                </DropdownItem> 
+                                ))}
                             </DropdownMenu>
                         </Dropdown>
                         <input
                             type="text"
                             placeholder="Search..."
-                            className="border border-gray-300 rounded-lg m-2 p-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="border border-gray-300 rounded-lg m-2 p-2 w-[60%] focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <Modal isOpen={isOpen} onClose={onClose}>
                             <ModalContent>
@@ -73,7 +101,7 @@ const SearchBar: React.FC<CityProps> = ({ citys }) => {
                                                 type="checkbox"
                                                 checked={selected[index] || false}
                                                 onChange={() => handleChange(index)}
-                                                className="ml-2 w-3 h-3"
+                                                className="ml-2 w-[10%] h-[10%]"
                                             />{citys.name}
                                         </div>
                                     ))}
@@ -87,8 +115,17 @@ const SearchBar: React.FC<CityProps> = ({ citys }) => {
                             )}
                             </ModalContent>
                         </Modal>
-                        <Button onPress={onOpen}>Miestai<DownArrow className="ml-2 w-6 h-6"></DownArrow></Button>
-                        <Button color="primary" className="ml-2" onPress={() => console.log("Search clicked")}>Ieškoti</Button>
+                        <Button onPress={onOpen}>
+                            {Object.values(selected).filter(Boolean).length === 0 ? "Miestai" :
+                            Object.values(selected).filter(Boolean).length > 1 ?
+                            Object.values(selected).filter(Boolean).length : citys
+                            .filter((citys, index) => selected[index])
+                            .map((citys, index) => <div key={index}>{citys.name}</div>)}
+                            <DownArrow className="ml-2 w-[50%] h-[50%]"></DownArrow>
+                        </Button>
+                        <Button color="primary" className="w-[15%] ml-2 font-semibold text-white bg-rose-600 hover:bg-rose-600/70 transition-all" onPress={() => console.log("Search clicked")}>
+                            Ieškoti
+                        </Button>
                     </div>
                 </CardBody>
             </Card>
