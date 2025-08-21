@@ -33,6 +33,14 @@ export default function DocsPage() {
   const citys:City[] =
   [ {id: 1, name: "Kaunas"}, {id: 2, name: "Vilnius"},
     {id: 3, name: "Kplaipeda"}, {id: 4, name: "Šiauliai"},
+    {id: 5, name: "Kaunas"}, {id: 6, name: "Vilnius"},
+    {id: 7, name: "Kplaipeda"}, {id: 8, name: "Šiauliai"},
+    {id: 9, name: "Kaunas"}, {id: 10, name: "Vilnius"},
+    {id: 11, name: "Kplaipeda"}, {id: 12, name: "Šiauliai"},
+    {id: 13, name: "Kaunas"}, {id: 14, name: "Vilnius"},
+    {id: 15, name: "Kplaipeda"}, {id: 16, name: "Šiauliai"},
+    {id: 17, name: "Kaunas"}, {id: 18, name: "Vilnius"},
+    {id: 19, name: "Kplaipeda"}, {id: 20, name: "Šiauliai"},
   ];
 
   return (
