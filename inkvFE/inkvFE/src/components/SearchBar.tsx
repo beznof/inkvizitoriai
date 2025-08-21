@@ -17,7 +17,6 @@ import {
   useDisclosure
 } from "@heroui/modal";
 import DownArrow from "@/static/DownArrow";
-import {Input} from "@heroui/input";
 
 import {City} from "@/types/City";
 import { Category } from "@/types/Category";
