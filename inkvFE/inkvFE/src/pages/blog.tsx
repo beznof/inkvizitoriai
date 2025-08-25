@@ -7,6 +7,8 @@ import { Category } from "@/types/Category";
 import { Subcategory } from "@/types/Subcategory";
 import CloseIcon from "@/static/CloseIcon";
 import ImageShowcase from "@/components/listing/ImageShowcase";
+import SearchBar from "@/components/SearchBar";
+import { City } from "@/types/City";
 
 export default function DocsPage() {
 
@@ -28,9 +30,22 @@ export default function DocsPage() {
     "https://plus.unsplash.com/premium_photo-1680700221535-a7aa2aa40a7c?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   ];
 
+  const citys:City[] =
+  [ {id: 1, name: "Kaunas"}, {id: 2, name: "Vilnius"},
+    {id: 3, name: "Kplaipeda"}, {id: 4, name: "Šiauliai"},
+    {id: 5, name: "Kaunas"}, {id: 6, name: "Vilnius"},
+    {id: 7, name: "Kplaipeda"}, {id: 8, name: "Šiauliai"},
+    {id: 9, name: "Kaunas"}, {id: 10, name: "Vilnius"},
+    {id: 11, name: "Kplaipeda"}, {id: 12, name: "Šiauliai"},
+    {id: 13, name: "Kaunas"}, {id: 14, name: "Vilnius"},
+    {id: 15, name: "Kplaipeda"}, {id: 16, name: "Šiauliai"},
+    {id: 17, name: "Kaunas"}, {id: 18, name: "Vilnius"},
+    {id: 19, name: "Kplaipeda"}, {id: 20, name: "Šiauliai"},
+  ];
+
   return (
     <MainLayout>
-      <div className="flex flex-col items-center justify-center w-[60%] text-center mx-auto">
+      <div className="flex flex-col items-center justify-center w-[100%] text-center mx-auto">
         <h1 className={title()}>Blog</h1>
         {ImageURL && name && price && city && <ListingCard
           imageURL={ImageURL} name={name} price={price} city={city} />}
@@ -38,6 +53,7 @@ export default function DocsPage() {
         {category && subcategories && <HomepageCategory category={category} subcategories={subcategories}
             svg={<CloseIcon></CloseIcon>}/>}
         {images && <ImageShowcase images={images}/>}
+        {citys && category && <SearchBar citys={citys} categorys={[category]}/>}
       </div>
     </MainLayout>
   );
